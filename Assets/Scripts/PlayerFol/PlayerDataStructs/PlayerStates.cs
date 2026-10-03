@@ -11,6 +11,7 @@ namespace PlayerFol.PlayerDataStructs
         public DashState DashState { get; private set; }
         public WallSlidingState WallSlidingState { get; private set; }
         public EdgeClimbingState EdgeClimbingState { get; private set; }
+        public AttackState AttackState { get; private set; }
 
         public PlayerStates(PlayerMovement movement, ParticleSystem pS)
         {
@@ -20,6 +21,7 @@ namespace PlayerFol.PlayerDataStructs
             DashState = new DashState(movement, pS);
             WallSlidingState = new WallSlidingState(movement);
             EdgeClimbingState = new EdgeClimbingState(movement);
+            AttackState = new AttackState(movement);
         }
     }
 }

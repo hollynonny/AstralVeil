@@ -10,6 +10,8 @@ namespace PlayerFol.PlStates
 
         public override void Enter()
         {
+            Movement.PlayerFlags.OnAirControl = true;
+            
             _maxJumpTimer = Movement.PlayerJumpData.MaxJumpHoldTime;
             Movement.ApplyJumpForce();
         }
@@ -17,6 +19,12 @@ namespace PlayerFol.PlStates
         public override void LogicUpdate()
         {
             _maxJumpTimer -= Time.deltaTime;
+            
+            if (Movement.AstralSystem.IsAstral && Movement.PlayerFlags.IsAttacking)
+            {
+                Movement.StateManager.ChangeState(Movement.PlayerStates.AttackState);
+                return;
+            }
 
             if (!Movement.AstralSystem.IsAstral && Movement.PlayerFlags.IsDashed)
             {
@@ -52,9 +60,12 @@ namespace PlayerFol.PlStates
 
         public override void PhysicsUpdate()
         {
-            Movement.ApplyAirControl();
+            Movement.SetControlMove();
         }
-        
-        public override void Exit() {}
+
+        public override void Exit()
+        {
+            Movement.PlayerFlags.OnAirControl = false;
+        }
     }
 }

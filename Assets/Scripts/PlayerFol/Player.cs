@@ -1,11 +1,14 @@
+using System;
 using Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerFol
 {
     public class Player : MonoBehaviour
     {
         [SerializeField] private Transform groundCheckPoint;
+        [FormerlySerializedAs("hurtBox")] [SerializeField] private HitBoxCollider hitBox;
     
         private PlayerMovement _playerMovement;
         private PlayerAnimation _playerAnimation;
@@ -29,8 +32,12 @@ namespace PlayerFol
             pS.Stop();
             
             BoxCollider2D bc = GetComponent<BoxCollider2D>();
-        
-            _playerMovement = new PlayerMovement(_rb, this.transform, groundCheckPoint, bc, pS);
+
+            Camera cam = Camera.main;
+            
+            hitBox.gameObject.SetActive(false);
+
+            _playerMovement = new PlayerMovement(_rb, this.transform, groundCheckPoint, bc, cam, pS, hitBox);
             _playerAnimation = new PlayerAnimation(anim);
         }
         
@@ -40,6 +47,8 @@ namespace PlayerFol
         
             InputHandler.Instance.OnJumpStarted += OnJumpStarted;
             InputHandler.Instance.OnJumpStopped += OnJumpStopped;
+
+            InputHandler.Instance.OnAttack += OnAttack;
         
             InputHandler.Instance.OnDashStarted += OnDashStarted;
             InputHandler.Instance.OnDashStopped += OnDashStopped;
@@ -47,6 +56,7 @@ namespace PlayerFol
             InputHandler.Instance.OnModeToggled += OnModeToggle;
 
             _playerMovement.AstralSystem.AstralStateChanged += _playerMovement.ToggleAstralGravity;
+            _playerMovement.PlayerData.HitBox.OnTargetHit += _playerMovement.OnEnemyHit;
         }
     
         private void OnDisable()
@@ -55,6 +65,8 @@ namespace PlayerFol
         
             InputHandler.Instance.OnJumpStarted -= OnJumpStarted;
             InputHandler.Instance.OnJumpStopped -= OnJumpStopped;
+            
+            InputHandler.Instance.OnAttack -= OnAttack;
         
             InputHandler.Instance.OnDashStarted -= OnDashStarted;
             InputHandler.Instance.OnDashStopped -= OnDashStopped;
@@ -78,6 +90,11 @@ namespace PlayerFol
         private void OnJumpStopped()
         {
             _playerMovement.OnJumpStopped();
+        }
+
+        private void OnAttack()
+        {
+            _playerMovement.OnAttack();
         }
 
         private void OnDashStarted()
@@ -106,6 +123,14 @@ namespace PlayerFol
             _playerAnimation.SetJumpAnimation(_rb.linearVelocity.y);
             _playerAnimation.SetDashAnimation(_playerMovement.PlayerFlags.IsDashing);
             _spriteRenderer.flipX = !_playerMovement.PlayerFlags.IsFacingRight;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.layer == LayerManager.TrapLayer)
+            {
+                // reset game to start pos
+            }
         }
     }
 }

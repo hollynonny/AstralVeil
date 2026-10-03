@@ -1,3 +1,4 @@
+using PlayerFol.PlayerDataStructs;
 using UnityEngine;
 
 namespace PlayerFol.PlStates
@@ -41,6 +42,7 @@ namespace PlayerFol.PlStates
 
         public override void Exit()
         {
+            Movement.PlayerData.Rigidbody.linearVelocity = Vector2.zero;
             Movement.TurnOnGravity();
             
             var emission = _particleSystem.emission;

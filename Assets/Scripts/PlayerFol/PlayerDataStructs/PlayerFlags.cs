@@ -9,7 +9,10 @@ namespace PlayerFol.PlayerDataStructs
         public bool CanDash { get; set; }
         public bool IsDashed { get; set; }
         public bool OnObjectDash { get; set; }
+        public bool SlidingOnWall { get; set; }
         public bool ClimbingOnEdge { get; set; }
         public bool IsFacingRight { get; set; }
+        public bool IsAttacking { get; set; }
+        public bool OnAirControl { get; set; }
     }
 }

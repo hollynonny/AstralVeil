@@ -1,0 +1,384 @@
+fileFormatVersion: 2
+guid: aaefcc4603425594db407fa52cdbe2fd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2260562917629033208
+    second: 1StaticEnemy_Anim_0
+  - first:
+      213: -2838604624216326453
+    second: 1StaticEnemy_Anim_1
+  - first:
+      213: -6861827603341269787
+    second: 1StaticEnemy_Anim_2
+  - first:
+      213: -7078781530335730159
+    second: 1StaticEnemy_Anim_3
+  - first:
+      213: 1173233036735930001
+    second: 1StaticEnemy_Anim_4
+  - first:
+      213: -8694644924888030980
+    second: 1StaticEnemy_Anim_5
+  - first:
+      213: 3643453613249691384
+    second: 1StaticEnemy_Anim_6
+  - first:
+      213: 1388069419278132930
+    second: 1StaticEnemy_Anim_7
+  - first:
+      213: 8414419203593385153
+    second: 1StaticEnemy_Anim_8
+  - first:
+      213: 280912153534627812
+    second: 1StaticEnemy_Anim_9
+  - first:
+      213: -4656010420960662604
+    second: 1StaticEnemy_Anim_10
+  - first:
+      213: 784532140393805767
+    second: 1StaticEnemy_Anim_11
+  - first:
+      213: 8333815076225153269
+    second: 1StaticEnemy_Anim_12
+  - first:
+      213: 5897264161309107730
+    second: 1StaticEnemy_Anim_13
+  - first:
+      213: -3538118543839407
+    second: 1StaticEnemy_Anim_14
+  - first:
+      213: -1618266656011979396
+    second: 1StaticEnemy_Anim_15
+  - first:
+      213: -4340079414883782191
+    second: 1StaticEnemy_Anim_16
+  - first:
+      213: 4605142281878301688
+    second: 1StaticEnemy_Anim_17
+  - first:
+      213: -4649467409301979257
+    second: 1StaticEnemy_Anim_18
+  - first:
+      213: -7025944897039060013
+    second: 1StaticEnemy_Anim_19
+  - first:
+      213: -6637342933073872187
+    second: 1StaticEnemy_Anim_20
+  - first:
+      213: 3611813703436139162
+    second: 1StaticEnemy_Anim_21
+  - first:
+      213: -1932281920391247486
+    second: 1StaticEnemy_Anim_22
+  - first:
+      213: -7057369905501293140
+    second: 1StaticEnemy_Anim_23
+  - first:
+      213: -5395945421170923290
+    second: 1StaticEnemy_Anim_24
+  - first:
+      213: -2455257221746723210
+    second: 1StaticEnemy_Anim_25
+  - first:
+      213: 1121613844920600436
+    second: 1StaticEnemy_Anim_26
+  - first:
+      213: 4987910125795968378
+    second: 1StaticEnemy_Anim_27
+  - first:
+      213: 3538422181437922614
+    second: 1StaticEnemy_Anim_28
+  - first:
+      213: 8629397695691091162
+    second: 1StaticEnemy_Anim_29
+  - first:
+      213: 5972297682345937130
+    second: 1StaticEnemy_Anim_30
+  - first:
+      213: -4161361394426479448
+    second: 1StaticEnemy_Anim_31
+  - first:
+      213: 8351050665796352205
+    second: 1StaticEnemy_Anim_32
+  - first:
+      213: -7635324828376533001
+    second: 1StaticEnemy_Anim_33
+  - first:
+      213: 4228897767147590266
+    second: 1StaticEnemy_Anim_34
+  - first:
+      213: 5134539050187266104
+    second: 1StaticEnemy_Anim_35
+  - first:
+      213: -6669768660524119653
+    second: 1StaticEnemy_Anim_36
+  - first:
+      213: 8048771899016076874
+    second: 1StaticEnemy_Anim_37
+  - first:
+      213: 6888594135611089554
+    second: 1StaticEnemy_Anim_38
+  - first:
+      213: -8862140376317306823
+    second: 1StaticEnemy_Anim_39
+  - first:
+      213: -5047712741200535775
+    second: 1StaticEnemy_Anim_40
+  - first:
+      213: 7515517375772192787
+    second: 1StaticEnemy_Anim_41
+  - first:
+      213: 6192133910517127838
+    second: 1StaticEnemy_Anim_42
+  - first:
+      213: 3705348271204872142
+    second: 1StaticEnemy_Anim_43
+  - first:
+      213: 3793683198237349415
+    second: 1StaticEnemy_Anim_44
+  - first:
+      213: -6098843208632140017
+    second: 1StaticEnemy_Anim_45
+  - first:
+      213: -6679630345249575865
+    second: 1StaticEnemy_Anim_46
+  - first:
+      213: 3419768401766848123
+    second: 1StaticEnemy_Anim_47
+  - first:
+      213: 2604733335521953433
+    second: 1StaticEnemy_Anim_48
+  - first:
+      213: 3420074033721490935
+    second: 1StaticEnemy_Anim_49
+  - first:
+      213: -5527979758436347613
+    second: 1StaticEnemy_Anim_50
+  - first:
+      213: -2209057907138193867
+    second: 1StaticEnemy_Anim_51
+  - first:
+      213: 5223073584363523813
+    second: 1StaticEnemy_Anim_52
+  - first:
+      213: 6197733925810405763
+    second: 1StaticEnemy_Anim_53
+  - first:
+      213: 4108947941183754759
+    second: 1StaticEnemy_Anim_54
+  - first:
+      213: 7318323665990332482
+    second: 1StaticEnemy_Anim_55
+  - first:
+      213: -7909760454344997477
+    second: 1StaticEnemy_Anim_56
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 1StaticEnemy_Anim_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a746f8f7121be684499ea64007fc18ad
+      internalID: 2260562917629033208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1StaticEnemy_Anim_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d97c78e56a848a441a869a792d01594a
+      internalID: -2838604624216326453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1StaticEnemy_Anim_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01776a4dc22c3414bbc4edc48ec58b84
+      internalID: -6861827603341269787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1StaticEnemy_Anim_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0111665e3f787f44ab027aea407ce329
+      internalID: -7078781530335730159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: a8092b85d9eefb64cbf6ad64f70ed823
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceOnImport
+        value: False
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      1StaticEnemy_Anim_0: 2260562917629033208
+      1StaticEnemy_Anim_1: -2838604624216326453
+      1StaticEnemy_Anim_2: -6861827603341269787
+      1StaticEnemy_Anim_3: -7078781530335730159
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

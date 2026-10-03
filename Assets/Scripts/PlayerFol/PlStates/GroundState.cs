@@ -8,6 +8,12 @@ namespace PlayerFol.PlStates
 
         public override void LogicUpdate()
         {
+            if (Movement.AstralSystem.IsAstral && Movement.PlayerFlags.IsAttacking)
+            {
+                Movement.StateManager.ChangeState(Movement.PlayerStates.AttackState);
+                return;
+            }
+            
             if (Movement.PlayerFlags.IsDashed && !Movement.AstralSystem.IsAstral)
             {
                 Movement.TurnDashedOff();

@@ -9,7 +9,7 @@ namespace PlayerFol
         
         public event Action AstralStateChanged;
 
-        public float GravityMultiplier => IsAstral ? 0.3f : 1.0f;
+        public float GravityMultiplier => IsAstral ? 0.4f : 1.0f;
         public float MovementMultiplier => IsAstral ? 0.5f : 1.0f;
         public float JumpMultiplier => IsAstral ? 0.5f : 1.0f;
         

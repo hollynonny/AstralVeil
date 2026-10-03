@@ -1,6 +1,8 @@
+using Enemy;
 using Managers;
 using PlayerFol.PlayerDataStructs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PlayerFol
 {
@@ -20,15 +22,16 @@ namespace PlayerFol
         public PlayerDashData PlayerDashData { get; } = new();
         public PlayerWallData PlayerWallData { get; } = new();
         public PlayerEdgeClimbData PlayerEdgeClimbData { get; } = new();
+        public PlayerAttackData PlayerAttackData { get; } = new();
         
         #endregion
 
         #region Constructor
         
         public PlayerMovement(Rigidbody2D rb, Transform playerTransform, Transform groundCheckPoint,
-            BoxCollider2D bc, ParticleSystem pS)
+            BoxCollider2D bc, Camera camera, ParticleSystem pS, HitBoxCollider hitBox)
         {
-            PlayerData = new PlayerData(playerTransform, groundCheckPoint, rb, bc);
+            PlayerData = new PlayerData(playerTransform, groundCheckPoint, rb, bc, camera, hitBox);
             PlayerStates = new PlayerStates(this, pS);
             PlayerFlags = new PlayerFlags();
             
@@ -49,9 +52,9 @@ namespace PlayerFol
 
         public void FixedUpdate()
         {
-            StateManager.CurrentState.PhysicsUpdate();
             PlayerJumpData.JumpBufferCounter = Mathf.Max(0, PlayerJumpData.JumpBufferCounter - Time.fixedDeltaTime);
             PlayerWallData.WallUnstickTimer = Mathf.Max(0, PlayerWallData.WallUnstickTimer - Time.fixedDeltaTime);
+            PlayerAttackData.AttackCooldownTimer = Mathf.Max(0, PlayerAttackData.AttackCooldownTimer - Time.fixedDeltaTime);
             
             if(!PlayerFlags.CanDash)
                 PlayerDashData.DashCooldownCounter = Mathf.Max(0, PlayerDashData.DashCooldownCounter - Time.fixedDeltaTime);
@@ -61,6 +64,10 @@ namespace PlayerFol
                 PlayerFlags.OnObjectDash = false;
                 SetCanDash(true);
             }
+
+            PlayerAttackData.PogoJumpTimer = Mathf.Max(0, PlayerAttackData.PogoJumpTimer - Time.fixedDeltaTime);
+            
+            StateManager.CurrentState.PhysicsUpdate();
         }
         
         #endregion
@@ -72,20 +79,16 @@ namespace PlayerFol
             PlayerJumpData.JumpBufferCounter = 0.0f;
             PlayerJumpData.CoyoteTimeCounter = 0.0f;
 
-            float direction;
             if (IsTouchingWall() || PlayerWallData.WallUnstickTimer > 0)
             {
                 float jumpOutDirection = PlayerFlags.IsFacingRight ? -1.0f : 1.0f;
-                direction = (PlayerParameters.WallJumpForce * jumpOutDirection) 
+                float direction = (PlayerParameters.WallJumpForce * jumpOutDirection) 
                             + (PlayerData.MoveInput.x * (PlayerParameters.Speed * 0.5f));
-            }
-            else
-            {
-                direction = PlayerData.Rigidbody.linearVelocity.x;
+                PlayerData.ExternalForce += new Vector2(direction, 0);
             }
 
             PlayerData.Rigidbody.linearVelocity = new Vector2(
-                direction * AstralSystem.MovementMultiplier,
+                PlayerData.Rigidbody.linearVelocity.x * AstralSystem.MovementMultiplier,
                 PlayerParameters.JumpForce * AstralSystem.JumpMultiplier
             );
         }
@@ -134,32 +137,102 @@ namespace PlayerFol
                 SetCanDash(true);
         }
 
-        public void StartEdgeClimbingTimer()
+        public void StartEdgeClimbingState()
         {
             PlayerFlags.ClimbingOnEdge = true;
-            PlayerEdgeClimbData.ClimbingEdgeTimer = PlayerEdgeClimbData.ClimbingEdgeTime;
         }
 
-        public void UpdateEdgeClimbingTimers()
+        public void UpdateEdgeClimbingState(Vector2 targetPos, Vector2 currentPos)
         {
-            PlayerEdgeClimbData.ClimbingEdgeTimer = Mathf.Max(0, PlayerEdgeClimbData.ClimbingEdgeTimer - Time.fixedDeltaTime);
-            
-            if (PlayerEdgeClimbData.ClimbingEdgeTimer <= 0)
+            float distance = Vector2.Distance(targetPos, currentPos);
+            if (distance < 0.01f)
+            {
                 PlayerFlags.ClimbingOnEdge = false;
+            }
         } 
         
         #endregion
-
-        #region Air(Fall) Methods
         
-        public void ApplyAirControl()
+        #region Attack Methods
+
+        public void OnAttack()
         {
-            if (PlayerWallData.WallUnstickTimer > 0) return;
+            if (!AstralSystem.IsAstral || PlayerAttackData.AttackCooldownTimer > 0) return;
+            PlayerFlags.IsAttacking = true;
+        }
+
+        public Vector2Int Get8DirectionFromMouse()
+        {
+            Vector3 playerPos = 
+                PlayerData.Camera.WorldToScreenPoint(PlayerData.PlayerTransform.position);
             
-            PlayerData.Rigidbody.linearVelocity = new Vector2(
-                PlayerData.MoveInput.x * PlayerParameters.AirSpeed,
-                PlayerData.Rigidbody.linearVelocity.y
-            );
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+
+            Vector2 direction = (mousePos - playerPos).normalized;
+            
+            if(direction.sqrMagnitude < PlayerAttackData.AttackDirectionDeadZone)
+                return PlayerFlags.IsFacingRight ? Vector2Int.right : Vector2Int.left;
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            return AngleTo8Direction(angle);
+        }
+
+        public void Attack()
+        {
+            PlayerAttackData.AttackDirection = Get8DirectionFromMouse();
+            
+            Vector2 hurtBoxPos = PlayerAttackData.HurtBoxPoses[PlayerAttackData.AttackSector];
+            float hurtBoxAngle = PlayerAttackData.HurtBoxAngles[PlayerAttackData.AttackSector];
+            
+            PlayerData.HitBox.gameObject.transform.localPosition = hurtBoxPos;
+            PlayerData.HitBox.gameObject.transform.localRotation = Quaternion.Euler(0, 0, hurtBoxAngle);
+            
+            PlayerData.HitBox.gameObject.SetActive(true);
+        }
+
+        public void OnEnemyHit(Collider2D collider)
+        {
+            if (collider.gameObject.layer == LayerManager.EnemyLayer)
+            {
+                EnemyTest enemyScript = collider.gameObject.GetComponent<EnemyTest>();
+                enemyScript.Disable();
+                
+                PogoJump();
+            }
+        }
+
+        private void PogoJump()
+        {
+            PlayerAttackData.PogoJumpTimer = PlayerAttackData.PogoJumpTime;
+            
+            Vector2 dir = ((Vector2)PlayerAttackData.AttackDirection).normalized;
+            PlayerData.ExternalForce += -dir * PlayerAttackData.PogoJumpForce;
+
+            SetCanDash(true);
+        }
+
+        private Vector2Int AngleTo8Direction(float angle)
+        {
+            angle += 22.5f;
+
+            if (angle < 0) angle += 360.0f;
+            
+            int sector = Mathf.FloorToInt(angle / 45.0f) % 8;
+            PlayerAttackData.AttackSector = sector;
+
+            return sector switch
+            {
+                0 => new Vector2Int(1, 0),
+                1 => new Vector2Int(1, 1),
+                2 => new Vector2Int(0, 1),
+                3 => new Vector2Int(-1, 1),
+                4 => new Vector2Int(-1, 0),
+                5 => new Vector2Int(-1, -1),
+                6 => new Vector2Int(0, -1),
+                7 => new Vector2Int(1, -1),
+                _ => Vector2Int.right
+            };
         }
         
         #endregion
@@ -172,6 +245,43 @@ namespace PlayerFol
             
             if (input.x == 0) return;
             PlayerFlags.IsFacingRight = input.x > 0 || !(input.x < 0);
+        }
+
+        public void SetControlMove()
+        {
+            float moveMultiplier = PlayerFlags.OnAirControl ? PlayerParameters.AirSpeed : PlayerParameters.Speed;
+            float targetControlX;
+            if (PlayerWallData.WallUnstickTimer <= 0)
+                targetControlX = PlayerData.MoveInput.x * moveMultiplier * AstralSystem.MovementMultiplier;
+            else
+                targetControlX = 0;
+            
+            PlayerData.ExternalForce = Vector2.MoveTowards(
+                PlayerData.ExternalForce,
+                Vector2.zero,
+                PlayerParameters.ExternalForceDecay * Time.fixedDeltaTime
+            );
+
+            float finalX = targetControlX + PlayerData.ExternalForce.x;
+            float finalY = PlayerData.Rigidbody.linearVelocity.y;
+
+            if (PlayerFlags.SlidingOnWall && PlayerWallData.WallUnstickTimer <= 0)
+            {
+                finalY = -PlayerParameters.WallSlideSpeed;
+            }
+            else
+            {
+                if (Mathf.Abs(PlayerData.ExternalForce.y) > 0.01f)
+                {
+                    if (PlayerData.ExternalForce.y > 0 && finalY < 0)
+                        finalY = 0;
+                    
+                    finalY += PlayerData.ExternalForce.y;
+                    PlayerData.ExternalForce = new Vector2(PlayerData.ExternalForce.x, 0);
+                }
+            }
+            
+            PlayerData.Rigidbody.linearVelocity = new Vector2(finalX, finalY);
         }
         
         #endregion
@@ -233,8 +343,6 @@ namespace PlayerFol
                 AstralSystem.EnterAstralState();
             else
                 AstralSystem.ExitAstralState();
-            
-            Debug.Log($"Astral mode is toggled\nCurrent mode: {(AstralSystem.IsAstral ? "Astral" : "Physics")}");
         }
         
         #endregion
@@ -347,8 +455,11 @@ namespace PlayerFol
             float wallX = PlayerEdgeClimbData.EdgeHit.point.x;
             float platformTopY = PlayerEdgeClimbData.EdgeHit.collider.bounds.max.y;
 
-            float targetX = wallX + (direction * PlayerData.Collider.bounds.extents.x);
-            float targetY = platformTopY + PlayerData.Collider.bounds.extents.y;
+            float offsetX = 0.5f;
+            float targetX = wallX + (direction * (PlayerData.Collider.bounds.extents.x + offsetX));
+
+            float offsetY = 0.5f;
+            float targetY = platformTopY + PlayerData.Collider.bounds.extents.y + offsetY;
             
             return new Vector2(targetX, targetY);
         }

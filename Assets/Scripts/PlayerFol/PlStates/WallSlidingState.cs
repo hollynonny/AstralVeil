@@ -9,6 +9,7 @@ namespace PlayerFol.PlStates
         public override void Enter()
         {
             Movement.PlayerData.Rigidbody.gravityScale = 0.0f;
+            Movement.PlayerFlags.SlidingOnWall = true;
         }
 
         public override void LogicUpdate()
@@ -48,15 +49,13 @@ namespace PlayerFol.PlStates
 
         public override void PhysicsUpdate()
         {
-            Movement.PlayerData.Rigidbody.linearVelocity = new Vector2(
-                0.0f,
-                -Movement.PlayerParameters.WallSlideSpeed
-            );
+            Movement.SetControlMove();
         }
 
         public override void Exit()
         {
             Movement.TurnOnGravity();
+            Movement.PlayerFlags.SlidingOnWall = false;
             Movement.PlayerWallData.WallUnstickTimer = Movement.PlayerWallData.WallUnstickTime;
         }
     }
