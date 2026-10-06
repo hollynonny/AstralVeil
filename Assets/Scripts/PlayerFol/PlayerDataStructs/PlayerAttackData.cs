@@ -10,7 +10,7 @@ namespace PlayerFol.PlayerDataStructs
         public float AttackCooldownTimer { get; set; }
         public int AttackSector { get; set; }
         public Vector2Int AttackDirection { get; set; }
-        public int PogoJumpForce { get; } = 10;
+        public int PogoJumpForce { get; } = 8;
         public float PogoJumpTime { get; } = 0.1f;
         public float PogoJumpTimer { get; set; }
 

@@ -7,7 +7,8 @@ namespace PlayerFol.PlayerDataStructs
         public float Speed => 5.0f;
         public float AirSpeed => 4.0f;
         public float JumpForce => 12.0f;
-        public float WallJumpForce => 6.0f;
+        public float MaxAirFlySpeed => 12.0f;
+        public float WallJumpForce => 5.0f;
         public float WallSlideSpeed => 3.0f;
         public float DashForce => 20.0f;
         public float GroundCheckRadius => 0.15f;

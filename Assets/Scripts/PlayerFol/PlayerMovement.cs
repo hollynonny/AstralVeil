@@ -87,9 +87,10 @@ namespace PlayerFol
                 PlayerData.ExternalForce += new Vector2(direction, 0);
             }
 
+            float finalY = Mathf.Min(PlayerParameters.MaxAirFlySpeed, PlayerParameters.JumpForce * AstralSystem.JumpMultiplier);
             PlayerData.Rigidbody.linearVelocity = new Vector2(
                 PlayerData.Rigidbody.linearVelocity.x * AstralSystem.MovementMultiplier,
-                PlayerParameters.JumpForce * AstralSystem.JumpMultiplier
+                finalY
             );
         }
 
@@ -263,7 +264,7 @@ namespace PlayerFol
             );
 
             float finalX = targetControlX + PlayerData.ExternalForce.x;
-            float finalY = PlayerData.Rigidbody.linearVelocity.y;
+            float finalY = 0.0f;
 
             if (PlayerFlags.SlidingOnWall && PlayerWallData.WallUnstickTimer <= 0)
             {
@@ -273,14 +274,14 @@ namespace PlayerFol
             {
                 if (Mathf.Abs(PlayerData.ExternalForce.y) > 0.01f)
                 {
-                    if (PlayerData.ExternalForce.y > 0 && finalY < 0)
-                        finalY = 0;
-                    
-                    finalY += PlayerData.ExternalForce.y;
+                    finalY = PlayerData.ExternalForce.y;
                     PlayerData.ExternalForce = new Vector2(PlayerData.ExternalForce.x, 0);
                 }
+                else
+                    finalY = PlayerData.Rigidbody.linearVelocity.y;
             }
             
+            finalY = Mathf.Min(PlayerParameters.MaxAirFlySpeed, finalY);
             PlayerData.Rigidbody.linearVelocity = new Vector2(finalX, finalY);
         }
         
@@ -407,12 +408,12 @@ namespace PlayerFol
             
             Vector2 bottomOrigin = new Vector2(
                 originX, 
-                PlayerData.Collider.bounds.center.y + (PlayerData.Collider.bounds.extents.y * 0.3f)
+                PlayerData.Collider.bounds.center.y + (PlayerData.Collider.bounds.extents.y * 0.8f)
             );
 
             Vector2 topOrigin = new Vector2(
                 originX, 
-                PlayerData.Collider.bounds.max.y + 0.05f
+                PlayerData.Collider.bounds.max.y + 0.2f
             );
 
             RaycastHit2D bottomHit = Physics2D.Raycast(
@@ -451,15 +452,27 @@ namespace PlayerFol
             if (!PlayerEdgeClimbData.EdgeHit.collider) return Vector2.zero;
             
             float direction = PlayerFlags.IsFacingRight ? 1.0f : -1.0f;
-
             float wallX = PlayerEdgeClimbData.EdgeHit.point.x;
-            float platformTopY = PlayerEdgeClimbData.EdgeHit.collider.bounds.max.y;
 
+            Vector2 rayStart = new Vector2(
+                wallX + (direction * 0.2f),
+                PlayerEdgeClimbData.EdgeHit.point.y + 1.5f
+            );
+
+            RaycastHit2D topSurfaceHit = Physics2D.Raycast(
+                rayStart,
+                Vector2.down,
+                2.0f,
+                LayerManager.GroundLayerMask
+            );
+            
+            float surfaceY = topSurfaceHit.collider ? topSurfaceHit.point.y : PlayerEdgeClimbData.EdgeHit.point.y;
+            
             float offsetX = 0.5f;
             float targetX = wallX + (direction * (PlayerData.Collider.bounds.extents.x + offsetX));
 
             float offsetY = 0.5f;
-            float targetY = platformTopY + PlayerData.Collider.bounds.extents.y + offsetY;
+            float targetY = surfaceY + PlayerData.Collider.bounds.extents.y + offsetY;
             
             return new Vector2(targetX, targetY);
         }

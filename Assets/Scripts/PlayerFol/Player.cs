@@ -38,7 +38,7 @@ namespace PlayerFol
             hitBox.gameObject.SetActive(false);
 
             _playerMovement = new PlayerMovement(_rb, this.transform, groundCheckPoint, bc, cam, pS, hitBox);
-            _playerAnimation = new PlayerAnimation(anim);
+            _playerAnimation = new PlayerAnimation(anim, _spriteRenderer);
         }
         
         private void OnEnable()
@@ -115,6 +115,36 @@ namespace PlayerFol
         private void FixedUpdate()
         {
             _playerMovement.FixedUpdate();
+        }
+
+        private void SetDefaultMaterial()
+        {
+            _playerAnimation.SetDefaultMaterial();
+        }
+
+        private void SetIdleMaterial()
+        {
+            _playerAnimation.SetIdleMaterial();
+        }
+
+        private void SetRunMaterial()
+        {
+            _playerAnimation.SetRunMaterial();
+        }
+
+        private void SetJumpMaterial()
+        {
+            _playerAnimation.SetJumpMaterial();
+        }
+
+        private void SetFallMaterial()
+        {
+            _playerAnimation.SetFallMaterial();
+        }
+
+        private void SetDashMaterial()
+        {
+            _playerAnimation.SetDashMaterial();
         }
 
         private void Update()

@@ -31,6 +31,8 @@ namespace Managers
 
         private void Awake()
         {
+            Application.targetFrameRate = -1;
+            
             inputActionAsset = Resources.Load<InputActionAsset>("InputSystem_Actions");
         
             _playerActionMap = inputActionAsset.FindActionMap("Player");
