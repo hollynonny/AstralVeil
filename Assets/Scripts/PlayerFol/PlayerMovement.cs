@@ -1,4 +1,4 @@
-using Enemy;
+using EnemyFol;
 using Managers;
 using PlayerFol.PlayerDataStructs;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace PlayerFol
 {
-    public class PlayerMovement
+    public class PlayerMovement : IResettable
     {
         #region Variables
         
@@ -23,15 +23,17 @@ namespace PlayerFol
         public PlayerWallData PlayerWallData { get; } = new();
         public PlayerEdgeClimbData PlayerEdgeClimbData { get; } = new();
         public PlayerAttackData PlayerAttackData { get; } = new();
+
+        private ParticleSystem _pS;
         
         #endregion
 
         #region Constructor
         
         public PlayerMovement(Rigidbody2D rb, Transform playerTransform, Transform groundCheckPoint,
-            BoxCollider2D bc, Camera camera, ParticleSystem pS, HitBoxCollider hitBox)
+            BoxCollider2D bc, Camera camera, ParticleSystem pS, HitBoxCollider hitBox, Transform graphicsTransform)
         {
-            PlayerData = new PlayerData(playerTransform, groundCheckPoint, rb, bc, camera, hitBox);
+            PlayerData = new PlayerData(playerTransform, groundCheckPoint, rb, bc, camera, hitBox, graphicsTransform);
             PlayerStates = new PlayerStates(this, pS);
             PlayerFlags = new PlayerFlags();
             
@@ -39,6 +41,76 @@ namespace PlayerFol
             StateManager.Initialize(PlayerStates.MoveState);
             
             AstralSystem = new AstralSystem();
+
+            _pS = pS;
+        }
+        
+        #endregion
+        
+        #region Resetter
+
+        public void ResetState() => Reset();
+
+        private void Reset()
+        {
+            StateManager.ChangeState(PlayerStates.MoveState);
+
+            ResetTimers();
+            ResetFlags();
+            
+            PlayerData.Rigidbody.linearVelocity = Vector2.zero;
+            PlayerData.Rigidbody.gravityScale = PlayerParameters.DefaultGravityScale;
+            PlayerData.Rigidbody.position = PlayerData.PlayerTransform.position;
+
+            PlayerData.GraphicsTransform.localPosition = Vector3.zero;
+            
+            PlayerData.HitBox.gameObject.SetActive(false);
+            
+            PlayerData.ExternalForce = Vector2.zero;
+
+            PlayerData.Collider.enabled = true;
+
+            AstralSystem.ExitAstralState();
+            
+            _pS.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            
+            Physics2D.SyncTransforms();
+        }
+
+        private void ResetFlags()
+        {
+            PlayerFlags.CanDash = true;
+            PlayerFlags.OnObjectDash = false;
+            PlayerFlags.IsDashed = false;
+            PlayerFlags.IsDashing = false;
+            PlayerFlags.IsDashHeld = false;
+            
+            PlayerFlags.ClimbingOnEdge = false;
+            
+            PlayerFlags.IsAttacking = false;
+            
+            PlayerFlags.IsFacingRight = true;
+
+            PlayerFlags.SlidingOnWall = false;
+
+            PlayerFlags.OnAirControl = false;
+
+            PlayerFlags.IsJumpHeld = false;
+        }
+
+        private void ResetTimers()
+        {
+            PlayerWallData.WallUnstickTimer = 0.0f;
+            
+            PlayerAttackData.AttackTimer = 0.0f;
+            PlayerAttackData.AttackCooldownTimer = 0.0f;
+            PlayerAttackData.PogoJumpTimer = 0.0f;
+
+            PlayerDashData.DashTimerCounter = 0.0f;
+            PlayerDashData.DashCooldownCounter = 0.0f;
+            
+            PlayerJumpData.CoyoteTimeCounter = 0.0f;
+            PlayerJumpData.JumpBufferCounter = 0.0f;
         }
         
         #endregion
@@ -105,12 +177,12 @@ namespace PlayerFol
         public void OnJumpStarted()
         {
             PlayerJumpData.JumpBufferCounter = PlayerJumpData.JumpBuffer;
-            PlayerJumpData.IsJumpHeld = true;
+            PlayerFlags.IsJumpHeld = true;
         }
 
         public void OnJumpStopped()
         {
-            PlayerJumpData.IsJumpHeld = false;
+            PlayerFlags.IsJumpHeld = false;
         }
         
         #endregion
@@ -196,8 +268,8 @@ namespace PlayerFol
         {
             if (collider.gameObject.layer == LayerManager.EnemyLayer)
             {
-                EnemyTest enemyScript = collider.gameObject.GetComponent<EnemyTest>();
-                enemyScript.Disable();
+                Enemy enemy = collider.gameObject.GetComponent<Enemy>();
+                enemy.Kill();
                 
                 PogoJump();
             }

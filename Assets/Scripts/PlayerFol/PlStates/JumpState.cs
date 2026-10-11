@@ -45,7 +45,7 @@ namespace PlayerFol.PlStates
                 return;
             }
 
-            if (!Movement.PlayerJumpData.IsJumpHeld)
+            if (!Movement.PlayerFlags.IsJumpHeld)
             {
                 Movement.CutJumpHeight();
                 Movement.StateManager.ChangeState(Movement.PlayerStates.FallState);

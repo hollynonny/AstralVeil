@@ -8,6 +8,7 @@ namespace PlayerFol.PlayerDataStructs
         public Camera Camera { get; private set; }
         
         public Transform PlayerTransform { get; private set; }
+        public Transform GraphicsTransform { get; set; }
         
         public Transform GroundCheckPoint { get; private set; }
         
@@ -17,18 +18,21 @@ namespace PlayerFol.PlayerDataStructs
         public Vector2 ExternalForce { get; set; }
         
         public BoxCollider2D Collider { get; private set; }
+        public Vector2 ColliderDefaultSize { get; private set; }
         
         public HitBoxCollider HitBox { get; private set; }
 
         public PlayerData(Transform playerTransform, Transform groundCheckPoint, Rigidbody2D rigidbody,
-            BoxCollider2D collider, Camera cam, HitBoxCollider hitBox)
+            BoxCollider2D collider, Camera cam, HitBoxCollider hitBox, Transform graphicsTransform)
         {
             PlayerTransform = playerTransform;
             GroundCheckPoint = groundCheckPoint;
+            GraphicsTransform = graphicsTransform;
             Rigidbody = rigidbody;
             Collider = collider;
             Camera = cam;
             HitBox = hitBox;
+            ColliderDefaultSize = collider.size;
         }
     }
 }

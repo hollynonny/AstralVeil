@@ -1,4 +1,3 @@
-using System;
 using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,24 +6,29 @@ namespace PlayerFol
 {
     public class Player : MonoBehaviour
     {
+        
+        #region Variables
+        
         [SerializeField] private Transform groundCheckPoint;
         [FormerlySerializedAs("hurtBox")] [SerializeField] private HitBoxCollider hitBox;
     
         private PlayerMovement _playerMovement;
         private PlayerAnimation _playerAnimation;
+        private Transform _graphicsTransform;
 
         private Rigidbody2D _rb;
         private SpriteRenderer _spriteRenderer;
+
+        #endregion
+        
+        #region Constructor
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
             if(_rb == null) Debug.LogWarning("No Rigidbody2D attached to the Player!");
             
-            Animator anim = GetComponent<Animator>();
-            if(anim == null) Debug.LogWarning("No Animator attached to the Player!");
-            
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             if (_spriteRenderer == null) Debug.LogWarning("No SpriteRenderer attached to the Player!");
             
             ParticleSystem pS = GetComponentInChildren<ParticleSystem>();
@@ -37,9 +41,15 @@ namespace PlayerFol
             
             hitBox.gameObject.SetActive(false);
 
-            _playerMovement = new PlayerMovement(_rb, this.transform, groundCheckPoint, bc, cam, pS, hitBox);
-            _playerAnimation = new PlayerAnimation(anim, _spriteRenderer);
+            _playerAnimation = GetComponentInChildren<PlayerAnimation>();
+            _graphicsTransform = _playerAnimation.gameObject.transform;
+            
+            _playerMovement = new PlayerMovement(_rb, this.transform, groundCheckPoint, bc, cam, pS, hitBox, _graphicsTransform);
         }
+        
+        #endregion
+        
+        #region Input Assign
         
         private void OnEnable()
         {
@@ -75,13 +85,23 @@ namespace PlayerFol
             
             _playerMovement.AstralSystem.AstralStateChanged -= _playerMovement.ToggleAstralGravity;
         }
+        
+        #endregion
+        
+        #region Action Assign
     
+        #region Movement Actions
+        
         private void OnMove(Vector2 input)
         {
             _playerMovement.SetMove(input);
             _playerAnimation.SetMoveAnimation(Mathf.Abs(input.x));
         }
+        
+        #endregion
 
+        #region Jump Actions
+        
         private void OnJumpStarted()
         {
             _playerMovement.OnJumpStarted();
@@ -91,11 +111,19 @@ namespace PlayerFol
         {
             _playerMovement.OnJumpStopped();
         }
+        
+        #endregion
+        
+        #region Attack Actions
 
         private void OnAttack()
         {
             _playerMovement.OnAttack();
         }
+        
+        #endregion
+        
+        #region Dash Actions
 
         private void OnDashStarted()
         {
@@ -106,45 +134,25 @@ namespace PlayerFol
         {
             _playerMovement.OnDashStopped();
         }
+        
+        #endregion
+        
+        #region Astral Mode Toggle Actions
 
         private void OnModeToggle()
         {
             _playerMovement.ToggleAstralMode();
         }
+        
+        #endregion
+        
+        #endregion
+        
+        #region Update Methods
 
         private void FixedUpdate()
         {
             _playerMovement.FixedUpdate();
-        }
-
-        private void SetDefaultMaterial()
-        {
-            _playerAnimation.SetDefaultMaterial();
-        }
-
-        private void SetIdleMaterial()
-        {
-            _playerAnimation.SetIdleMaterial();
-        }
-
-        private void SetRunMaterial()
-        {
-            _playerAnimation.SetRunMaterial();
-        }
-
-        private void SetJumpMaterial()
-        {
-            _playerAnimation.SetJumpMaterial();
-        }
-
-        private void SetFallMaterial()
-        {
-            _playerAnimation.SetFallMaterial();
-        }
-
-        private void SetDashMaterial()
-        {
-            _playerAnimation.SetDashMaterial();
         }
 
         private void Update()
@@ -152,15 +160,27 @@ namespace PlayerFol
             _playerMovement.Update();
             _playerAnimation.SetJumpAnimation(_rb.linearVelocity.y);
             _playerAnimation.SetDashAnimation(_playerMovement.PlayerFlags.IsDashing);
+            _playerAnimation.SetWallingAnimation(_playerMovement.PlayerFlags.SlidingOnWall);
             _spriteRenderer.flipX = !_playerMovement.PlayerFlags.IsFacingRight;
         }
+        
+        #endregion
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.layer == LayerManager.TrapLayer)
+            bool trapped = other.gameObject.layer == LayerManager.TrapLayer;
+            bool enemied = other.gameObject.layer == LayerManager.EnemyLayer;
+            if (trapped || enemied)
             {
-                // reset game to start pos
+                Die();
             }
+        }
+
+        private void Die()
+        {
+            RoomManager.Instance.Respawn(transform);
+            _playerMovement.ResetState();
+            // _playerAnimation.ResetState();
         }
     }
 }

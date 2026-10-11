@@ -2,26 +2,28 @@ using UnityEngine;
 
 namespace PlayerFol
 {
-    public class PlayerAnimation
+    public class PlayerAnimation : MonoBehaviour
     {
         private static readonly int XForceHash = Animator.StringToHash("XForce");
         private static readonly int YForceHash = Animator.StringToHash("YForce");
         private static readonly int IsDashingHash = Animator.StringToHash("IsDashing");
+        private static readonly int IsWalling = Animator.StringToHash("IsWalling");
         
-        private readonly SpriteRenderer _spriteRenderer;
-        private readonly Animator _anim;
+        private SpriteRenderer _spriteRenderer;
+        private Animator _anim;
 
-        private readonly Material _defaultMaterial;
-        private readonly Material _idleMaterial;
-        private readonly Material _runMaterial;
-        private readonly Material _jumpMaterial;
-        private readonly Material _fallMaterial;
-        private readonly Material _dashMaterial;
-        
-        public PlayerAnimation(Animator animator, SpriteRenderer spriteRenderer)
+        private Material _defaultMaterial;
+        private Material _idleMaterial;
+        private Material _runMaterial;
+        private Material _jumpMaterial;
+        private Material _fallMaterial;
+        private Material _dashMaterial;
+        private Material _wallingMaterial;
+
+        public void Awake()
         {
-            _anim = animator;
-            _spriteRenderer = spriteRenderer;
+            _anim = GetComponent<Animator>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
 
             _defaultMaterial = Resources.Load<Material>("Materials/Player_Default_Lights");
             _idleMaterial = Resources.Load<Material>("Materials/Player_Idle_Lights");
@@ -29,8 +31,9 @@ namespace PlayerFol
             _jumpMaterial = Resources.Load<Material>("Materials/Player_Jump_Lights");
             _dashMaterial = Resources.Load<Material>("Materials/Player_Dash_Lights");
             _fallMaterial = Resources.Load<Material>("Materials/Player_Fall_Lights");
+            _wallingMaterial = Resources.Load<Material>("Materials/Player_Walling_Lights");
         }
-
+        
         public void SetMoveAnimation(float xForce)
         {
             _anim.SetFloat(XForceHash, xForce);
@@ -44,6 +47,11 @@ namespace PlayerFol
         public void SetDashAnimation(bool isDashing)
         {
             _anim.SetBool(IsDashingHash, isDashing);
+        }
+
+        public void SetWallingAnimation(bool isWalling)
+        {
+            _anim.SetBool(IsWalling, isWalling);
         }
 
         public void SetDefaultMaterial()
@@ -74,6 +82,11 @@ namespace PlayerFol
         public void SetFallMaterial()
         {
             SetMaterial(_fallMaterial);
+        }
+
+        public void SetWallingMaterial()
+        {
+            SetMaterial(_wallingMaterial);
         }
 
         private void SetMaterial(Material material)

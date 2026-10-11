@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1306466997697491582}
   - component: {fileID: 3326565300667896861}
   - component: {fileID: 201123372453580481}
-  - component: {fileID: 1546627381568253164}
+  - component: {fileID: 1878337076373325374}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
@@ -69,7 +69,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.057817936, y: 0.03857994}
+  m_Offset: {x: -0.047564507, y: -0.026782393}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -79,7 +79,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.2543993, y: 1.1915507}
+  m_Size: {x: 0.8699131, y: 0.8301356}
   m_EdgeRadius: 0
 --- !u!212 &3326565300667896861
 SpriteRenderer:
@@ -162,7 +162,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1546627381568253164
+--- !u!114 &1878337076373325374
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,6 +171,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7690934170352615453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1781ba6e0ef811049b24ac2b3e0d884b, type: 3}
+  m_Script: {fileID: 11500000, guid: ebcd1a92a4d05ce4b851a4013d4e2ab9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy.EnemyTest
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFol.StaticEnemy

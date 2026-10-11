@@ -14,5 +14,6 @@ namespace PlayerFol.PlayerDataStructs
         public bool IsFacingRight { get; set; }
         public bool IsAttacking { get; set; }
         public bool OnAirControl { get; set; }
+        public bool IsJumpHeld { get; set; }
     }
 }

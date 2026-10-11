@@ -31,6 +31,7 @@ namespace Managers
 
         private void Awake()
         {
+            QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = -1;
             
             inputActionAsset = Resources.Load<InputActionAsset>("InputSystem_Actions");

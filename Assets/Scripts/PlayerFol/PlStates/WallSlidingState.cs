@@ -10,6 +10,13 @@ namespace PlayerFol.PlStates
         {
             Movement.PlayerData.Rigidbody.gravityScale = 0.0f;
             Movement.PlayerFlags.SlidingOnWall = true;
+
+            float offsetX = Movement.PlayerFlags.IsFacingRight ? 1.0f : -1.0f;
+            Movement.PlayerData.GraphicsTransform.localPosition = new Vector3(
+                offsetX * 0.2f,
+                Movement.PlayerData.GraphicsTransform.localPosition.y,
+                Movement.PlayerData.GraphicsTransform.localPosition.z
+            );
         }
 
         public override void LogicUpdate()
@@ -56,6 +63,7 @@ namespace PlayerFol.PlStates
         {
             Movement.TurnOnGravity();
             Movement.PlayerFlags.SlidingOnWall = false;
+            Movement.PlayerData.GraphicsTransform.localPosition = Vector3.zero;
             Movement.PlayerWallData.WallUnstickTimer = Movement.PlayerWallData.WallUnstickTime;
         }
     }
