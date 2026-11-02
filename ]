@@ -1,0 +1,42 @@
+using UnityEngine;
+
+namespace BossFol
+{
+    public abstract class BossAttackState<TController> : BossState<TController>
+        where TController : BossController
+    {
+        private float _timeLeft;
+        
+        protected abstract int AnimationBoolHash { get; }
+        protected abstract float Duration { get; }
+        protected abstract BossState NextState { get; }
+
+        protected virtual bool FacePlayerOnEnter => true;
+        protected float TimeLeft => _timeLeft;
+        
+        public BossAttackState(TController controller) : base(controller)
+        { }
+
+        public override void Enter()
+        {
+            _timeLeft = Duration;
+            
+            Animator.SetBool(AnimationBoolHash, true);
+            
+            if(FacePlayerOnEnter)
+                Controller.FacePlayer();
+        }
+
+        public override void LogicUpdate()
+        {
+            _timeLeft -= Time.deltaTime;
+            if(_timeLeft <= 0)
+                StateManager.ChangeState(NextState);
+        }
+
+        public override void Exit()
+        {
+            Animator.SetBool(AnimationBoolHash, false);
+        }
+    }
+}

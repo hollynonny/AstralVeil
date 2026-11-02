@@ -1,3 +1,6 @@
+using System.Collections;
+using BossFol;
+using CameraFol;
 using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,6 +21,8 @@ namespace PlayerFol
 
         private Rigidbody2D _rb;
         private SpriteRenderer _spriteRenderer;
+        
+        public bool IsDead { get; private set; }
 
         #endregion
         
@@ -152,11 +157,15 @@ namespace PlayerFol
 
         private void FixedUpdate()
         {
+            if (IsDead) return;
+            
             _playerMovement.FixedUpdate();
         }
 
         private void Update()
         {
+            if(IsDead) return;
+            
             _playerMovement.Update();
             _playerAnimation.SetJumpAnimation(_rb.linearVelocity.y);
             _playerAnimation.SetDashAnimation(_playerMovement.PlayerFlags.IsDashing);
@@ -165,9 +174,11 @@ namespace PlayerFol
         }
         
         #endregion
-
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if(IsDead) return;
+            
             bool trapped = other.gameObject.layer == LayerManager.TrapLayer;
             bool enemied = other.gameObject.layer == LayerManager.EnemyLayer;
             if (trapped || enemied)
@@ -175,12 +186,36 @@ namespace PlayerFol
                 Die();
             }
         }
-
+        
         private void Die()
         {
-            RoomManager.Instance.Respawn(transform);
+            IsDead = true;
+            _playerMovement.OnDeath();
+            StartCoroutine(WaitForRespawn());
+        }
+
+        private void Revive()
+        {
+            RoomManager.Instance.Respawn();
             _playerMovement.ResetState();
-            // _playerAnimation.ResetState();
+            
+            IsDead = false;
+        }
+
+        private readonly WaitForSecondsRealtime _peakWait = new(0.5f);
+        private readonly WaitForSecondsRealtime _deathWait = new(1.0f);
+        
+        private IEnumerator WaitForRespawn()
+        {
+            yield return _deathWait;
+            
+            CameraEffects.Instance.StartEmitting();
+            
+            yield return _peakWait;
+            
+            Revive();
+            
+            CameraEffects.Instance.StopEmitting();
         }
     }
 }

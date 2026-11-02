@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Trap
   - DeathAir
+  - Chaser
+  - StoneGolem
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - UI
   - Enemy
   - Trap
-  - DeathAir
+  - 
   - 
   - 
   - 
@@ -41,11 +43,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 417205409
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
   - name: Player
     uniqueID: 1463050955
+    locked: 0
+  - name: Foreground
+    uniqueID: 2598486763
     locked: 0
   m_RenderingLayers:
   - Default

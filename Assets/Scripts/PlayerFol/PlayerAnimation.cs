@@ -93,7 +93,7 @@ namespace PlayerFol
         {
             if (material != null)
             {
-                _spriteRenderer.material = material;
+                _spriteRenderer.sharedMaterial = material;
             }
         }
     }

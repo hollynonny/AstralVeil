@@ -1,3 +1,4 @@
+using BossFol;
 using EnemyFol;
 using Managers;
 using PlayerFol.PlayerDataStructs;
@@ -49,6 +50,13 @@ namespace PlayerFol
         
         #region Resetter
 
+        public void OnDeath()
+        {
+            PlayerData.Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            PlayerData.Rigidbody.gravityScale = 0.0f;
+            PlayerData.Rigidbody.linearVelocity = Vector2.zero;
+        }
+
         public void ResetState() => Reset();
 
         private void Reset()
@@ -61,6 +69,7 @@ namespace PlayerFol
             PlayerData.Rigidbody.linearVelocity = Vector2.zero;
             PlayerData.Rigidbody.gravityScale = PlayerParameters.DefaultGravityScale;
             PlayerData.Rigidbody.position = PlayerData.PlayerTransform.position;
+            PlayerData.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
 
             PlayerData.GraphicsTransform.localPosition = Vector3.zero;
             
@@ -268,8 +277,8 @@ namespace PlayerFol
         {
             if (collider.gameObject.layer == LayerManager.EnemyLayer)
             {
-                Enemy enemy = collider.gameObject.GetComponent<Enemy>();
-                enemy.Kill();
+                IDamageable enemy = collider.gameObject.GetComponent<IDamageable>();
+                enemy.TakeDamage(1);
                 
                 PogoJump();
             }
