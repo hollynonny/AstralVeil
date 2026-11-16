@@ -202,7 +202,7 @@ namespace PlayerFol
             IsDead = false;
         }
 
-        private readonly WaitForSecondsRealtime _peakWait = new(0.5f);
+        private readonly WaitForSecondsRealtime _peakWait = new(1.0f);
         private readonly WaitForSecondsRealtime _deathWait = new(1.0f);
         
         private IEnumerator WaitForRespawn()

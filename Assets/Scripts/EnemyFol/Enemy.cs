@@ -9,37 +9,29 @@ namespace EnemyFol
     {
         private static readonly int IdleHash = Animator.StringToHash("Enemy_Idle");
 
-        public EnemyStateManager StateManager { get; protected set; }
-        public EnemyStates EnemyStates { get; protected set; }
+        public EnemyStateManager StateManager { get; } = new();
+        private EnemyState _initialState;
 
-        protected BoxCollider2D Collider;
-        protected SpriteRenderer SpriteRenderer;
-        protected Animator Animator;
-        protected Vector3 StartPos;
+        public BoxCollider2D Collider { get; private set; }
+        public SpriteRenderer SpriteRenderer { get; private set; }
+        public Animator Animator { get; private set; }
         
-        public Transform Player { get; private set; }
-
         public bool IsDead { get; private set; }
-        public float AgroDistance { get; } = 7.5f;
-        public float SqrDistanceToPlayer => ((Vector2)(Player.transform.position - transform.position)).sqrMagnitude;
-
-        protected virtual void Awake()
-        {
-            StartPos = transform.position;
-            
-            InitializeComponents();
-
-            EnemyStates = new EnemyStates(this);
-
-            StateManager = new EnemyStateManager();
-            StateManager.Initialize(EnemyStates.IdleState);
-        }
 
         protected virtual void Start()
         {
-            Player = RoomManager.Instance.Player;
+            StateManager.Initialize(_initialState);
         }
         
+        protected virtual void Awake()
+        {
+            InitializeComponents();
+            
+            _initialState = CreateStates();
+        }
+
+        protected abstract EnemyState CreateStates();
+
         protected virtual void InitializeComponents()
         {
             Collider = GetComponent<BoxCollider2D>();
@@ -67,10 +59,7 @@ namespace EnemyFol
             IsDead = false;
             Collider.enabled = true;
             SpriteRenderer.enabled = true;
-            transform.position = StartPos;
             Animator.enabled = true;
-            
-            StateManager.ChangeState(EnemyStates.IdleState);
         }
     }
 }

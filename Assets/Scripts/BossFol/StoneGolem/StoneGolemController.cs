@@ -56,7 +56,11 @@ namespace BossFol.StoneGolem
 
         public override void ResetState()
         {
-            if (IsDead) return;
+            if (IsDead)
+            {
+                StateManager.ChangeState(States.Death);
+                return;
+            }
             
             FinishAction();
             

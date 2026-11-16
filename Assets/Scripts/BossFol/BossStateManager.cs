@@ -49,14 +49,6 @@ namespace BossFol
             _isTransitioning = false;
         }
 
-        public void ForceChangeState(BossState state)
-        {
-            CurrentState?.Exit();
-            PreviousState = CurrentState;
-            CurrentState = state;
-            CurrentState.Enter();
-        }
-
         public void Tick() => CurrentState?.LogicUpdate();
         public void PhysicsTick() => CurrentState?.PhysicsUpdate();
     }

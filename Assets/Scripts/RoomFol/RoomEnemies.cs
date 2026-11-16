@@ -9,7 +9,7 @@ namespace RoomFol
 
         private void Awake()
         {
-            _items = GetComponentsInChildren<IResettable>(true);
+            _items = GetComponentsInChildren<IResettable>();
         }
 
         public void ResetAll()

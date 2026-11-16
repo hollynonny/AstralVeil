@@ -13,6 +13,8 @@ namespace EnemyFol
 
         public void ChangeState(EnemyState state)
         {
+            if (state == null) return;
+            
             CurrentState.Exit();
             CurrentState = state;
             CurrentState.Enter();

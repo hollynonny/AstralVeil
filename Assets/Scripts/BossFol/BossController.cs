@@ -1,5 +1,4 @@
 using Managers;
-using PlayerFol;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -146,7 +145,10 @@ namespace BossFol
 
         public virtual void ResetState()
         {
-            if (IsDead) return;
+            if (IsDead)
+            {
+                return;
+            }
             
             Rigidbody.linearVelocity = Vector2.zero;
             Rigidbody.angularVelocity = 0f;
